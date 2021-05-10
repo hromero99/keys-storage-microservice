@@ -2,10 +2,14 @@ from flask import Flask
 from Crypto.PublicKey import RSA
 from flask import request
 from flask_sqlalchemy import SQLAlchemy
-import jsonify
+import os
+
+sqlite_database = os.getenv("SQLITE_URI")
+if not sqlite_database:
+    raise Exception("SQLITE_URI not defined")
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = sqlite_database
 db = SQLAlchemy(app)
 
 from models import Key
