@@ -4,6 +4,7 @@ from flask import request
 from flask_sqlalchemy import SQLAlchemy
 import os
 
+
 sqlite_database = os.getenv("SQLITE_URI")
 if not sqlite_database:
     raise Exception("SQLITE_URI not defined")
@@ -23,7 +24,7 @@ def home():
     return "Hello"
 
 
-@app.route("/generate", methods=["POST"])
+@app.route("/generate/", methods=["POST"])
 def generate_rsa_keys():
     key = RSA.generate(2048)
     data = request.get_json()
@@ -35,4 +36,13 @@ def generate_rsa_keys():
     db.session.add(key_model)
     db.session.commit()
     return "Success", 200
+
+
+@app.route("/query/<device_id>/", methods=["GET"])
+def query_rsa_public_key(device_id):
+    try:
+        search_query = db.session.query(Key).filter_by(device_id=device_id)
+        return search_query.first().p_key, 200
+    except Exception as queryError:
+        return {"error": str(queryError)}, 404
 
