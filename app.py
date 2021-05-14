@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from Crypto.PublicKey import RSA
 from flask import request
 from flask_sqlalchemy import SQLAlchemy
@@ -45,7 +45,16 @@ def query_rsa_public_key(device_id):
     try:
         search_query = db.session.query(Key).filter_by(device_id=device_id)
         key = search_query.first()
-        return {"data": key.p_key}, 200
+        return jsonify({"data": key.p_key}), 200
     except Exception as queryError:
         return {"error": str(queryError)}, 404
 
+
+@app.route("/query/private/<device_id>/", methods=["GET"])
+def query_rsa_private_key(device_id):
+    try:
+        search_query = db.session.query(Key).filter_by(device_id=device_id)
+        key = search_query.first()
+        return jsonify({"data": key.pr_key}), 200
+    except Exception as queryError:
+        return {"error": str(queryError)}, 404
