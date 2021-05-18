@@ -9,7 +9,7 @@ WORKDIR /app
 COPY . .
 COPY --from=base /app/venv/ /app/venv
 RUN chmod +x /app/entrypoint.sh
-ENV SQLITE_URI="sqlite:///database.db"
+ENV DATABASE_URI=""
 ENV GUNICORN_WORKERS=1
 EXPOSE 8000
 ENTRYPOINT ["/app/entrypoint.sh"]

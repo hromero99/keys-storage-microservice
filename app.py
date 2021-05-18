@@ -5,12 +5,12 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 
 
-sqlite_database = os.getenv("SQLITE_URI")
-if not sqlite_database:
-    raise Exception("SQLITE_URI not defined")
+database_uri = os.getenv("DATABASE_URI")
+if not database_uri:
+    raise Exception("DATABASE_URI not defined")
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = sqlite_database
+app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
 db = SQLAlchemy(app)
 
 from models import Key
